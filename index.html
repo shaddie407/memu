@@ -348,73 +348,18 @@
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95"
         >
-             <!-- 
-      MODAL 1: "GET 10% OFF" SIGNUP FORM 
-      This is visible by default.
-    -->
-    <div id="signup-modal" class="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-75 p-4">
-        <div class="bg-brand-base text-brand-light p-8 sm:p-12 rounded-lg shadow-xl max-w-md w-full relative">
-            
-            <!-- Close Button for Signup Modal -->
-            <button id="close-signup-btn" class="absolute top-4 right-4 text-gray-400 hover:text-brand-light transition-colors">
+             <button @click="manualClose()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
-            
-            <!-- Modal Content -->
             <h2 class="text-4xl font-serif">Get 10% off.</h2>
             <h3 class="text-3xl font-serif mt-1">It's on us.</h3>
-            <p class="mt-4 text-sm text-brand-light opacity-80">Become a member of the Memuci Club and get <strong>10% off your first order</strong>—plus early access to exclusive promos, product launches, and wellness content to make your life feel just a little bit better.</p>
-            
-            <!-- 
-              Signup Form
-              - We give it an ID "signup-form" to target with JavaScript.
-              - The action URL is correct.
-            -->
-            <form id="signup-form" class="mt-6" action="https://formspree.io/f/xkgpdyay" method="post">
-                <input type="email" name="email" placeholder="Email address" required class="w-full p-3 bg-black bg-opacity-25 border border-gray-600 rounded-md text-brand-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-accent">
-                
-                <!-- This is the submit button -->
-                <button type="submit" class="mt-4 w-full bg-brand-accent text-brand-light py-3 font-semibold rounded-md hover:bg-opacity-90 transition-colors">
-                    <!-- We can add a spinner for the loading state -->
-                    <span id="button-text">CONTINUE</span>
-                    <span id="button-spinner" class="hidden">
-                        <svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </span>
-                </button>
+            <p class="mt-4 text-sm text-gray-300">Become a member of the Memuci Club and get <strong>10% off your first order</strong>—plus early access to exclusive promos, product launches, and wellness content to make your life feel just a little bit better.</p>
+            <form @submit.prevent="manualClose()" class="mt-6" form id="signup-form" class="mt-6" action="https://formspree.io/f/xkgpdyay" method="post">
+      <input type="email" name="email" placeholder="Email address" required class="w-full p-3 bg-black bg-opacity-25 border border-gray-600 rounded-md text-brand-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-accent">
+                <button type="submit" class="mt-4 w-full bg-white text-brand-base py-3 font-semibold rounded-md hover:bg-gray-200 transition-colors">CONTINUE</button> 
             </form>
-            
-            <!-- Form Error Message (hidden by default) -->
-            <div id="form-error" class="hidden mt-4 text-sm text-red-400">
-                Something went wrong. Please try again.
-            </div>
-
-            <p class="text-xs text-brand-light opacity-70 mt-4">By continuing, you agree to our <a href="#" class="underline">Terms & Conditions</a>.</p>
+            <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our <a href="#" data-target="terms-page" class="page-link underline">Terms & Conditions</a>.</p>
         </div>
-    </div>
-
-    <!-- 
-      MODAL 2: "CHECK YOUR EMAIL" SUCCESS MESSAGE
-      This is hidden by default using the "hidden" class.
-    -->
-    <div id="success-modal" class="hidden fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-75 p-4">
-        <!-- 
-          Styled to look like the "POOSH" example you sent.
-          Black background, white text, centered.
-        -->
-        <div class="bg-black text-brand-light p-12 sm:p-20 rounded-lg shadow-xl max-w-md w-full relative text-center">
-            
-            <!-- Close Button for Success Modal -->
-            <button id="close-success-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-            
-            <!-- Success Message -->
-            <h2 class="text-3xl sm:text-4xl font-semibold tracking-wider">CHECK YOUR EMAIL</h2>
-            <p class="text-lg text-gray-300 mt-2">For your 10% off code.</p>
-         </div>
     </div>
 
     <!-- Sale Pop-up Modal -->
@@ -678,10 +623,10 @@ products: {
                     "Pilau": { prepTime: "20 mins", cookTime: "45 mins", servings: "4", calories: 650, tags: ['High protein'], image: "https://i.pinimg.com/736x/20/50/d0/2050d0c4c127019748cf9993c0867aa8.jpg", description: "A flavorful rice dish cooked with spices and meat.", ingredients: ["2 cups Basmati rice", "500g beef, cubed", "2 large onions", "4 cloves garlic", "1 tbsp Pilau Masala", "3 tbsp vegetable oil", "4 cups beef broth", "Salt to taste"], instructions: ["Caramelize sugar in oil, then sauté onions.", "Add beef, garlic, ginger, and all spices. Brown the meat.", "Pour in broth, season with salt, and simmer until meat is tender.", "Add rice, cover, and cook on low heat for 15-20 minutes until fluffy."] },
                     "Sukuma Wiki": { prepTime: "10 mins", cookTime: "20 mins", servings: "2", calories: 150, tags: [], image: "https://i.pinimg.com/736x/f4/7b/49/f47b49b9b3018727c7f0c7c4d89ee23e.jpg", description: "A popular Kenyan vegetable dish made from collard greens.", ingredients: ["1 large bunch of collard greens (Sukuma)", "1 large onion, chopped", "2 ripe tomatoes", "2 tbsp vegetable oil", "Salt to taste"], instructions: ["Heat oil and cook onions until soft.", "Add tomatoes and cook down.", "Add shredded sukuma and stir until just wilted (3-5 minutes).", "Season with salt and serve immediately."] },
                     "Kuku Choma": { prepTime: "15 mins", cookTime: "45 mins", servings: "4", calories: 550, tags: ['High protein'], image: "https://i.pinimg.com/736x/4e/be/88/4ebe88bb66f8c15659396ada84cd9d74.jpg", description: "Grilled chicken, often served with kachumbari and ugali.", ingredients: ["1 whole chicken, cut into pieces", "Juice of 2 lemons", "4 cloves garlic, minced", "1 inch ginger, grated", "1 tbsp salt", "1 tsp black pepper"], instructions: ["Mix all marinade ingredients in a bowl.", "Marinate the chicken for at least 1 hour.", "Grill over medium heat for 20-30 minutes, turning occasionally, until cooked through.", "Serve hot with kachumbari and ugali."] },
-                    "Vitamin-Packed Carrot Juice": { prepTime: "10 mins", cookTime: "2 mins", servings: "1", calories: 120, tags: [], image: "https://i.pinimg.com/1200x/45/c7/64/45c764639a1b05958669a9f991f93ae9.jpg", description: "A vibrant and refreshing juice to boost your immune system.", ingredients: ["5 large carrots", "2 oranges, peeled", "1-inch piece of ginger", "1/2 lemon, peeled"], instructions: ["Wash all produce thoroughly.", "Pass all ingredients through a juicer.", "Stir and serve immediately over ice for the best taste and nutritional value."] },
-                    "Famous Layered Dip": { prepTime: "15 mins", cookTime: "10 mins", servings: "8", calories: 350, tags: [], image: "https://i.pinimg.com/1200x/e8/ee/9a/e8ee9acd974c2807c11adc091f442616.jpg", description: "The ultimate crowd-pleasing dip, perfect for any gathering.", ingredients: ["1 can (16oz) refried beans", "1 cup guacamole", "1 cup sour cream", "1 cup salsa", "1 cup shredded cheddar cheese", "1/2 cup chopped tomatoes", "1/4 cup sliced black olives", "2 tbsp chopped green onions"], instructions: ["Spread refried beans on the bottom of a clear serving dish.", "Carefully layer guacamole, sour cream, and salsa on top.", "Sprinkle with cheese, tomatoes, olives, and green onions.", "Chill for at least 1 hour before serving with tortilla chips."] },
-                    "Protein Smoothie Bowl": { prepTime: "10 mins", cookTime: "10 mins", servings: "1", calories: 450, tags: ['High protein'], image: "https://i.pinimg.com/1200x/32/8e/b6/328eb60847718cbb62ca4d38246c0393.jpg", description: "A delicious and energizing smoothie bowl, perfect for a post-workout breakfast.", ingredients: ["1 frozen banana", "1/2 cup frozen berries", "1 scoop vanilla protein powder", "1/2 cup almond milk", "Toppings: granola, fresh fruit, chia seeds"], instructions: ["Combine frozen banana, berries, protein powder, and almond milk in a blender.", "Blend until smooth and creamy.", "Pour into a bowl and add your favorite toppings.", "Enjoy immediately!"] },
-                    "Post-Workout Chicken Salad": { prepTime: "15 mins", cookTime: "10 mins", servings: "2", calories: 400, tags: ['High protein'], image: "https://i.pinimg.com/736x/36/8f/75/368f758b5497126de43a16aff78f56dc.jpg", description: "A light yet satisfying salad packed with protein to refuel your muscles.", ingredients: ["2 cups cooked shredded chicken", "1/4 cup Greek yogurt", "1 tbsp lemon juice", "1/4 cup chopped celery", "1/4 cup halved grapes", "Salt and pepper to taste", "Lettuce wraps or whole-wheat bread"], instructions: ["In a medium bowl, combine shredded chicken, Greek yogurt, and lemon juice.", "Stir in celery and grapes.", "Season with salt and pepper to taste.", "Serve in lettuce wraps or on whole-wheat bread for a delicious and healthy meal."] },
+                    "Vitamin-Packed Carrot Juice": { prepTime: "10mins", cookTime: "2 mins", servings: "1", calories: 120, tags: [], image: "https://i.pinimg.com/1200x/45/c7/64/45c764639a1b05958669a9f991f93ae9.jpg", description: "A vibrant and refreshing juice to boost your immune system.", ingredients: ["5 large carrots", "2 oranges, peeled", "1-inch piece of ginger", "1/2 lemon, peeled"], instructions: ["Wash all produce thoroughly.", "Pass all ingredients through a juicer.", "Stir and serve immediately over ice for the best taste and nutritional value."] },
+                    "Famous Layered Dip": { prepTime: "15 mins", cookTime: "10mins", servings: "8", calories: 350, tags: [], image: "https://i.pinimg.com/1200x/e8/ee/9a/e8ee9acd974c2807c11adc091f442616.jpg", description: "The ultimate crowd-pleasing dip, perfect for any gathering.", ingredients: ["1 can (16oz) refried beans", "1 cup guacamole", "1 cup sour cream", "1 cup salsa", "1 cup shredded cheddar cheese", "1/2 cup chopped tomatoes", "1/4 cup sliced black olives", "2 tbsp chopped green onions"], instructions: ["Spread refried beans on the bottom of a clear serving dish.", "Carefully layer guacamole, sour cream, and salsa on top.", "Sprinkle with cheese, tomatoes, olives, and green onions.", "Chill for at least 1 hour before serving with tortilla chips."] },
+                    "Protein Smoothie Bowl": { prepTime: "10 mins", cookTime: "10mins", servings: "1", calories: 450, tags: ['High protein'], image: "https://i.pinimg.com/1200x/32/8e/b6/328eb60847718cbb62ca4d38246c0393.jpg", description: "A delicious and energizing smoothie bowl, perfect for a post-workout breakfast.", ingredients: ["1 frozen banana", "1/2 cup frozen berries", "1 scoop vanilla protein powder", "1/2 cup almond milk", "Toppings: granola, fresh fruit, chia seeds"], instructions: ["Combine frozen banana, berries, protein powder, and almond milk in a blender.", "Blend until smooth and creamy.", "Pour into a bowl and add your favorite toppings.", "Enjoy immediately!"] },
+                    "Post-Workout Chicken Salad": { prepTime: "15 mins", cookTime: "10mins", servings: "2", calories: 400, tags: ['High protein'], image: "https://i.pinimg.com/736x/36/8f/75/368f758b5497126de43a16aff78f56dc.jpg", description: "A light yet satisfying salad packed with protein to refuel your muscles.", ingredients: ["2 cups cooked shredded chicken", "1/4 cup Greek yogurt", "1 tbsp lemon juice", "1/4 cup chopped celery", "1/4 cup halved grapes", "Salt and pepper to taste", "Lettuce wraps or whole-wheat bread"], instructions: ["In a medium bowl, combine shredded chicken, Greek yogurt, and lemon juice.", "Stir in celery and grapes.", "Season with salt and pepper to taste.", "Serve in lettuce wraps or on whole-wheat bread for a delicious and healthy meal."] },
                     "Kourt's Famous Zoodles Recipe": { prepTime: "15 mins", cookTime: "10 mins", servings: "2", calories: 350, tags: [], image: "https://i.pinimg.com/736x/cf/49/b8/cf49b88e38b9962839c0a7ef430411b7.jpg", description: "A light, healthy, and surprisingly delicious zucchini noodle dish that's a celebrity favorite.", ingredients: ["2 medium zucchinis, spiralized", "1/4 cup crispy bacon bits", "1 cup baby spinach", "1/4 cup shredded carrots", "2 tbsp olive oil", "Salt and pepper to taste"], instructions: ["Heat olive oil in a pan over medium heat.", "Add spinach and carrots, sautéing until spinach is wilted.", "Add the zoodles and cook for 2-3 minutes until just tender.", "Toss with bacon bits, season with salt and pepper, and serve immediately."] },
                     "A Debloating Salad to ADD TO YOUR ROTATION": { prepTime: "15 mins", cookTime: "10 mins", servings: "2", calories: 320, tags: [], image: "https://i.pinimg.com/736x/f8/66/f4/f866f4c7ccb06077cc4e2cb2f410f8ce.jpg", description: "This delicious salad is packed with ingredients that help reduce bloating and support digestion.", ingredients: ["2 cups arugula", "1 cup roasted sweet potatoes, cubed", "1/2 cup cooked quinoa", "1/4 cup toasted walnuts", "Dressing: 2 tbsp olive oil, 1 tbsp lemon juice, 1 tsp maple syrup"], instructions: ["Roast sweet potato cubes at 400°F (200°C) for 10 minutes or until tender.", "In a large bowl, combine arugula, quinoa, and roasted sweet potatoes.", "Whisk together dressing ingredients and pour over the salad.", "Top with toasted walnuts and serve."] }
                 }
@@ -843,73 +788,47 @@ products: {
                 const adultingArticles = Object.entries(content.articles).filter(([_, a]) => a.category === 'Adulting & Real Talk').slice(0,6).map(([title, article]) => ({ ...article, title, shortTitle: title }));
                 const homeLivingArticle = Object.entries(content.articles).find(([_, a]) => a.category === 'Home & Slow Living');
                 
-                // Pinterest Gallery Image Data (Optimized URLs)
-const galleryImages = {
-  travels: [
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1500835556837-99ac94a94552?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&w=800&q=80"
-  ],
-
-  tours: [
-    "https://images.unsplash.com/photo-1535358593892-127921447833?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1581489189913-0941855a153d?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1615638519442-42e77b6a1d4a?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1599557049-92f7062a4a2b?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1525078964292-62886105a884?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1534710134446-b8a7b3b4d1b7?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1547471080-7cc2d5d88e93?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1516426122078-c23e763199c0?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1534341821434-1a35f2df1818?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1574717467657-618731b0587a?auto=format&fit=crop&w=800&q=80"
-  ],
-
-  momDiaries: [
-    "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1593108422119-a1b66511a8a2?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1484665754824-2d0963191873?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1478479405421-ce83c92fb3ba?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1482235225574-c37692835cf3?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1507983936109-3a19e18b08c0?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1546015220-45d2d8959ed7?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1616728079860-88abbf1a5f4d?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1485182708500-e8f1f3182e2e?auto=format&fit=crop&w=800&q=80"
-  ],
-
-  food: [
-    "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1490645935967-10de6ba17025?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1607532941433-304659e8198a?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1484723050470-8bf10b643034?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=800&q=80"
-  ],
-
-  lifestyle: [
-    "https://images.unsplash.com/photo-1541533267759-d8f48866174c?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1512212675885-3996924b22c3?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1501876725168-00c445821c9e?auto=format&fit=crop&w=800&q=80"
-  ]
-};
+                const galleryImages = {
+                    travels: [
+                        "https://images.unsplash.com/photo-1501785888041-af3ef285b470", "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1", "https://images.unsplash.com/photo-1488646953014-85cb44e25828", "https://images.unsplash.com/photo-1503220317375-aaad61436b1b",
+                        "https://images.unsplash.com/photo-1530789253388-582c481c54b0", "https://images.unsplash.com/photo-1500835556837-99ac94a94552", "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800", "https://images.unsplash.com/photo-1527631746610-bca00a040d60",
+                        "https://images.unsplash.com/photo-1528543606781-2f6e6857f318", "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd", "https://images.unsplash.com/photo-1507525428034-b723a9ce6890", "https://images.unsplash.com/photo-1517760444937-f6397edcbbcd",
+                        "https://images.unsplash.com/photo-1498307833015-e7b400441eb8", "https://images.unsplash.com/photo-1542051841857-5f90071e7989", "https://images.unsplash.com/photo-1505832018843-57151d383818", "https://images.unsplash.com/photo-1502602898657-3e91760c0341",
+                        "https://images.unsplash.com/photo-1483729558449-99ef09a8c325", "https://images.unsplash.com/photo-1534430480872-3498386e7856", "https://images.unsplash.com/photo-1506744038136-46273834b3fb", "https://images.unsplash.com/photo-1539635278303-d4002c07eae3",
+                        "https://images.unsplash.com/photo-1473625247510-8ceb1760943f", "https://images.unsplash.com/photo-1519922639102-1a221a7c881a", "https://images.unsplash.com/photo-1504150558240-0b4fd23ab682", "https://images.unsplash.com/photo-1532976331682-a8eb5ade9f1d"
+                    ],
+                    tours: [
+                        "https://images.unsplash.com/photo-1535358593892-127921447833", "https://images.unsplash.com/photo-1581489189913-0941855a153d", "https://images.unsplash.com/photo-1615638519442-42e77b6a1d4a", "https://images.unsplash.com/photo-1599557049-92f7062a4a2b",
+                        "https://images.unsplash.com/photo-1525078964292-62886105a884", "https://images.unsplash.com/photo-1534710134446-b8a7b3b4d1b7", "https://images.unsplash.com/photo-1547471080-7cc2d_5d88e93", "https://images.unsplash.com/photo-1516426122078-c23e763199c0",
+                        "https://images.unsplash.com/photo-1534341821434-1a35f2df1818", "https://images.unsplash.com/photo-1574717467657-618731b0587a", "https://images.unsplash.com/photo-1524314184646-60787e14889c", "https://images.unsplash.com/photo-1602416974033-285f25a952f4",
+                        "https://images.unsplash.com/photo-1565538749452-f63451515283", "https://images.unsplash.com/photo-1566473952134-928d54ad010d", "https://images.unsplash.com/photo-1569488859353-93d3a7d51784", "https://images.unsplash.com/photo-1526485856403-910543685649",
+                        "https://images.unsplash.com/photo-1594892417743-5778a8779133", "https://images.unsplash.com/photo-1563653123491-913a89a1a09d", "https://images.unsplash.com/photo-1569398322234-8c876f2f2187", "https://images.unsplash.com/photo-1550978939-5e9215003504",
+                        "https://images.unsplash.com/photo-1549643462-8f1952a5e456", "https://images.unsplash.com/photo-1528702748617-c67d29f9c3fd", "https://images.unsplash.com/photo-1518544465-7562f854f738", "https://images.unsplash.com/photo-1564522237810-d54b8a562b26"
+                    ],
+                    "mom-diaries": [
+                        "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4", "https://images.unsplash.com/photo-1593108422119-a1b66511a8a2", "https://images.unsplash.com/photo-1527529482837-4698179dc6ce", "https://images.unsplash.com/photo-1484665754824-2d0963191873",
+                        "https://images.unsplash.com/photo-1478479405421-ce83c92fb3ba", "https://images.unsplash.com/photo-1482235225574-c37692835cf3", "https://images.unsplash.com/photo-1507983936109-3a19e18b08c0", "https://images.unsplash.com/photo-1546015220-45d2d8959ed7",
+                        "https://images.unsplash.com/photo-1616728079860-88abbf1a5f4d", "https://images.unsplash.com/photo-1485182708500-e8f1f3182e2e", "https://images.unsplash.com/photo-1508215886492-c889a721387d", "https://images.unsplash.com/photo-1595152772105-a7e692a8323a",
+                        "https://images.unsplash.com/photo-1545239351-ef35f43d514b", "https://images.unsplash.com/photo-1566004100631-35d015d6a491", "https://images.unsplash.com/photo-1527814223023-e696352d3a33", "https://images.unsplash.com/photo-1530012270924-5b363afd11e4",
+                        "https://images.unsplash.com/photo-1488114312323-5a0d3b6649f3", "https://images.unsplash.com/photo-1491841550275-5b462bf92929", "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b", "https://images.unsplash.com/photo-1531185343486-973658455325",
+                        "https://images.unsplash.com/photo-1484980972926-edee96e0960d", "https://images.unsplash.com/photo-1476492981352-f15562a045a2", "https://images.unsplash.com/photo-1506045353593-01004a187a53", "https://images.unsplash.com/photo-1560380894-26105f23512c"
+                    ],
+                    food: [
+                        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1", "https://images.unsplash.com/photo-1490645935967-10de6ba17025", "https://images.unsplash.com/photo-1607532941433-304659e8198a", "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe",
+                        "https://images.unsplash.com/photo-1484723050470-8bf10b643034", "https://images.unsplash.com/photo-1482049016688-2d3e1b311543", "https://images.unsplash.com/photo-1504674900247-0877df9cc836", "https://images.unsplash.com/photo-1498837167922-ddd27525d352",
+                        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38", "https://images.unsplash.com/photo-1473093226795-af9932fe5856", "https://images.unsplash.com/photo-1512621776951-a57141f2eefd", "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+                        "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9", "https://images.unsplash.com/photo-1496116218417-1a764741a332", "https://images.unsplash.com/photo-1490818387583-1baba5e638af", "https://images.unsplash.com/photo-1505253716362-afb50c68a127",
+                        "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b", "https://images.unsplash.com/photo-1543339308-43e59d6b70a6", "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd", "https://images.unsplash.com/photo-1529990135899-764952093557",
+                        "https://images.unsplash.com/photo-1484984532626-14342a34b4b2", "https://images.unsplash.com/photo-1564834744158-a0b7381275d7", "https://images.unsplash.com/photo-1506354666786-959d6d497f1a", "https://images.unsplash.com/photo-1470337458703-46ad1756a187"
+                    ],
+                    lifestyle: [
+                        "https://images.unsplash.com/photo-1541533267759-d8f48866174c", "https://images.unsplash.com/photo-1441986300917-64674bd600d8", "https://images.unsplash.com/photo-1555212697-194d092e3b8f", "https://images.unsplash.com/photo-1524758631624-e2822e304c36",
+                        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e", "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688", "https://images.unsplash.com/photo-1505691938895-1758d7feb511", "https://images.unsplash.com/photo-1512212675885-3996924b22c3",
+                        "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af", "https://images.unsplash.com/photo-1501876725168-00c445821c9e", "https://images.unsplash.com/photo-1484154218962-a197022b5858", "https://images.unsplash.com/photo-1505693416388-ac5ce0687954",
+                        "https://images.unsplash.com/photo-1460518451285-97b6aa326961", "https://images.unsplash.com/photo-1516131206008-dd041a97645a", "https://images.unsplash.com/photo-1530018607932-a2538b2dfa43", "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
+                        "https://images.unsplash.com/photo-1523475256011-38ae2b5a4bf4", "https://images.unsplash.com/photo-1503174971373-b1f69850bded", "https://images.unsplash.com/photo-1512918728675-ed5a71a580bd", "https://images.unsplash.com/photo-1497366811353-6870744d04b2",
+                        "https://images.unsplash.com/photo-1497032628192-86f99d791b7e", "https://images.unsplash.com/photo-1521783964894-38c64a382170", "https://images.unsplash.com/photo-1504275107627-0c2ba7a43dba", "https://images.unsplash.com/photo-1511974278737-68b868945836"
+                    ]
                 };
 
                 const renderGalleryGrid = (images) => {
@@ -2258,103 +2177,90 @@ if (pageId === 'product-page') {
         line-height: 1.6;
     }
 
-   /* * ▼▼▼ THIS IS YOUR NEW, ADVANCED CSS ▼▼▼
-         * (This replaces your old .whatsapp-popup styles)
-         */
-        .whatsapp {
-            /* Layout */
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 1000;
-            
-            /* ▼ DEFAULT STATE (Circular Icon) ▼ */
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Centers the icon */
-            background-color: #25D366; /* Use WhatsApp green */
-            width: 60px;  /* Fixed width for the circle */
-            height: 60px; /* Fixed height for the circle */
-            border-radius: 50%; /* Makes it a perfect circle */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            
-            /* Text & Link */
-            text-decoration: none;
-            
-            /* Animation */
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* "Bounce" effect */
-        }
-
-        .whatsapp img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0;
-            /* Added transition for smoother margin change on hover */
-            transition: margin 0.3s ease-in-out;
-        }
-
-        .whatsapp .whatsapp-text {
-            /* ▼ HIDE TEXT BY DEFAULT ▼ */
-            max-width: 0;
-            opacity: 0;
-            visibility: hidden;
-            overflow: hidden;
-            white-space: nowrap; /* Prevents wrapping during animation */
-            transition: max-width 0.3s ease-in-out, opacity 0.2s ease, visibility 0.3s;
-        }
-
-        .whatsapp .whatsapp-text strong {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff; /* Make text white to contrast the green */
-        }
-
-        /* ▼ HOVER STATE (Expanded Pill) ▼ */
-        .whatsapp:hover {
-            width: auto; /* Let it grow */
-            border-radius: 30px; /* Back to pill shape */
-            padding: 10px 16px;
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
+    /* * 2. ▼▼▼ THIS IS THE NEW, ADVANCED CSS ▼▼▼
+     * (This replaces your old .whatsapp-popup styles)
+     */
+    .whatsapp-popup {
+        /* Layout */
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1000;
         
-        .whatsapp:hover img {
-            /* Add margin to separate icon from text on hover */
-            margin-right: 12px;
-        }
+        /* ▼ DEFAULT STATE (Circular Icon) ▼ */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centers the icon */
+        background-color: #25D366; /* Use WhatsApp green */
+        width: 60px;  /* Fixed width for the circle */
+        height: 60px; /* Fixed height for the circle */
+        border-radius: 50%; /* Makes it a perfect circle */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        
+        /* Text & Link */
+        text-decoration: none;
+        
+        /* Animation */
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* "Bounce" effect */
+    }
 
-        .whatsapp:hover .whatsapp-text {
-            /* Reveal the text */
-            max-width: 200px;
-            opacity: 1;
-            visibility: visible;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 text-gray-800 p-10">
+    .whatsapp-popup img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin: 0;
+    }
 
-    <div class="container mx-auto max-w-2xl">
-        <h1 class="text-3xl font-bold mb-4">Test Page</h1>
-        <p class="mb-4">This is some placeholder content on the page. The WhatsApp button should be floating over this content in the bottom-right corner.</p>
-        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.</p>
-        <p>Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa.</p>
-    </div>
+    .whatsapp-popup .whatsapp-text {
+        /* ▼ HIDE TEXT BY DEFAULT ▼ */
+        max-width: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        white-space: nowrap; /* Prevents wrapping during animation */
+        transition: max-width 0.3s ease-in-out, opacity 0.2s ease, visibility 0.3s;
+    }
 
-    <!--  
-      ▼▼▼ THIS IS THE HTML ▼▼▼
-      NOTE: The class is now "whatsapp" to match your CSS.
-    -->
+    .whatsapp-popup .whatsapp-text strong {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff; /* Make text white to contrast the green */
+    }
+
+    /* ▼ HOVER STATE (Expanded Pill) ▼ */
+    .whatsapp-popup:hover {
+        width: auto; /* Let it grow */
+        border-radius: 30px; /* Back to pill shape */
+        padding: 10px 16px;
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
     
-    <!-- ★★★ I moved this comment here, outside the 'a' tag ★★★ -->
+    .whatsapp-popup:hover img {
+        /* Add margin to separate icon from text on hover */
+        margin-right: 12px;
+    }
+
+    .whatsapp-popup:hover .whatsapp-text {
+        /* Reveal the text */
+        max-width: 200px;
+        opacity: 1;
+        visibility: visible;
+    }
+</style>
+<body>
+    <!-- 
+      ▼▼▼ THIS IS PART 2: THE HTML ▼▼▼
+      Copy this whole 'a' block.
+    -->
+      
     <a href="https://wa.me/254708773943?text=Hello!%20I'm%20visiting%20your%20website%20and%20have%20a%20question."
-       class="whatsapp"
+       class="whatsapp-popup" 
        target="_blank"
        title="Chat with us on WhatsApp">
-        
+       
         <img src="https://i.pinimg.com/736x/b1/a6/7d/b1a67d9315a05ed2f49326ef6bdc0fd5.jpg"
-             alt="WhatsApp Chat"
-             onerror="this.src='https://placehold.co/40x40/25D366/FFFFFF?text=WA'; this.onerror=null;">
+             onerror="this.style.display='none'">
         
         <div class="whatsapp-text">
             <strong>Chat with us</strong>
@@ -2362,11 +2268,6 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
-
-
-
-
-
 
 
 
