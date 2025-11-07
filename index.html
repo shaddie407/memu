@@ -2235,7 +2235,7 @@ if (pageId === 'product-page') {
     /* * 2. ▼▼▼ THIS IS THE NEW, ADVANCED CSS ▼▼▼
      * (This replaces your old .whatsapp-popup styles)
      */
-    .whatsapp-popup {
+    .whatsapp {
         /* Layout */
         position: fixed;
         bottom: 25px;
@@ -2259,14 +2259,14 @@ if (pageId === 'product-page') {
         transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* "Bounce" effect */
     }
 
-    .whatsapp-popup img {
+    .whatsapp img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         margin: 0;
     }
 
-    .whatsapp-popup .whatsapp-text {
+    .whatsapp .whatsapp-text {
         /* ▼ HIDE TEXT BY DEFAULT ▼ */
         max-width: 0;
         opacity: 0;
@@ -2276,14 +2276,14 @@ if (pageId === 'product-page') {
         transition: max-width 0.3s ease-in-out, opacity 0.2s ease, visibility 0.3s;
     }
 
-    .whatsapp-popup .whatsapp-text strong {
+    .whatsapp .whatsapp-text strong {
         font-size: 16px;
         font-weight: 600;
         color: #ffffff; /* Make text white to contrast the green */
     }
 
     /* ▼ HOVER STATE (Expanded Pill) ▼ */
-    .whatsapp-popup:hover {
+    .whatsapp:hover {
         width: auto; /* Let it grow */
         border-radius: 30px; /* Back to pill shape */
         padding: 10px 16px;
@@ -2291,12 +2291,12 @@ if (pageId === 'product-page') {
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
     
-    .whatsapp-popup:hover img {
+    .whatsapp:hover img {
         /* Add margin to separate icon from text on hover */
         margin-right: 12px;
     }
 
-    .whatsapp-popup:hover .whatsapp-text {
+    .whatsapp:hover .whatsapp-text {
         /* Reveal the text */
         max-width: 200px;
         opacity: 1;
@@ -2323,6 +2323,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
