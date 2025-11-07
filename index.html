@@ -843,71 +843,92 @@ products: {
                 const adultingArticles = Object.entries(content.articles).filter(([_, a]) => a.category === 'Adulting & Real Talk').slice(0,6).map(([title, article]) => ({ ...article, title, shortTitle: title }));
                 const homeLivingArticle = Object.entries(content.articles).find(([_, a]) => a.category === 'Home & Slow Living');
                 
-                const galleryImages = {
+                // Pinterest Gallery Image Data (Optimized URLs)
+const galleryImages = {
   travels: [
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1",
-    "https://images.unsplash.com/photo-1488646953014-85cb44e25828",
-    "https://images.unsplash.com/photo-1503220317375-aaad61436b1b",
-    "https://images.unsplash.com/photo-1530789253388-582c481c54b0",
-    "https://images.unsplash.com/photo-1500835556837-99ac94a94552",
-    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800",
-    "https://images.unsplash.com/photo-1527631746610-bca00a040d60",
-    "https://images.unsplash.com/photo-1528543606781-2f6e6857f318",
-    "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd"
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1500835556837-99ac94a94552?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&w=800&q=80"
   ],
 
   tours: [
-    "https://images.unsplash.com/photo-1535358593892-127921447833",
-    "https://images.unsplash.com/photo-1581489189913-0941855a153d",
-    "https://images.unsplash.com/photo-1615638519442-42e77b6a1d4a",
-    "https://images.unsplash.com/photo-1599557049-92f7062a4a2b",
-    "https://images.unsplash.com/photo-1525078964292-62886105a884",
-    "https://images.unsplash.com/photo-1534710134446-b8a7b3b4d1b7",
-    "https://images.unsplash.com/photo-1547471080-7cc2d5d88e93",
-    "https://images.unsplash.com/photo-1516426122078-c23e763199c0",
-    "https://images.unsplash.com/photo-1534341821434-1a35f2df1818",
-    "https://images.unsplash.com/photo-1574717467657-618731b0587a"
+    "https://images.unsplash.com/photo-1535358593892-127921447833?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1581489189913-0941855a153d?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1615638519442-42e77b6a1d4a?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1599557049-92f7062a4a2b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1525078964292-62886105a884?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1534710134446-b8a7b3b4d1b7?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1547471080-7cc2d5d88e93?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1516426122078-c23e763199c0?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1534341821434-1a35f2df1818?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1574717467657-618731b0587a?auto=format&fit=crop&w=800&q=80"
   ],
 
   momDiaries: [
-    "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4",
-    "https://images.unsplash.com/photo-1593108422119-a1b66511a8a2",
-    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce",
-    "https://images.unsplash.com/photo-1484665754824-2d0963191873",
-    "https://images.unsplash.com/photo-1478479405421-ce83c92fb3ba",
-    "https://images.unsplash.com/photo-1482235225574-c37692835cf3",
-    "https://images.unsplash.com/photo-1507983936109-3a19e18b08c0",
-    "https://images.unsplash.com/photo-1546015220-45d2d8959ed7",
-    "https://images.unsplash.com/photo-1616728079860-88abbf1a5f4d",
-    "https://images.unsplash.com/photo-1485182708500-e8f1f3182e2e"
+    "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1593108422119-a1b66511a8a2?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1484665754824-2d0963191873?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1478479405421-ce83c92fb3ba?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1482235225574-c37692835cf3?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1507983936109-3a19e18b08c0?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1546015220-45d2d8959ed7?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1616728079860-88abbf1a5f4d?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1485182708500-e8f1f3182e2e?auto=format&fit=crop&w=800&q=80"
   ],
 
   food: [
-    "https://images.unsplash.com/photo-1555939594-58d7cb561ad1",
-    "https://images.unsplash.com/photo-1490645935967-10de6ba17025",
-    "https://images.unsplash.com/photo-1607532941433-304659e8198a",
-    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe",
-    "https://images.unsplash.com/photo-1484723050470-8bf10b643034",
-    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
-    "https://images.unsplash.com/photo-1498837167922-ddd27525d352",
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
-    "https://images.unsplash.com/photo-1473093226795-af9932fe5856"
+    "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1490645935967-10de6ba17025?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1607532941433-304659e8198a?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1484723050470-8bf10b643034?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=800&q=80"
   ],
 
   lifestyle: [
-    "https://images.unsplash.com/photo-1541533267759-d8f48866174c",
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
-    "https://images.unsplash.com/photo-1555212697-194d092e3b8f",
-    "https://images.unsplash.com/photo-1524758631624-e2822e304c36",
-    "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e",
-    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",
-    "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-    "https://images.unsplash.com/photo-1512212675885-3996924b22c3",
-    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af",
-    "https://images.unsplash.com/photo-1501876725168-00c445821c9e"
+    "https://images.unsplash.com/photo-1541533267759-d8f48866174c?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1512212675885-3996924b22c3?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1501876725168-00c445821c9e?auto=format&fit=crop&w=800&q=80"
   ]
+};
+
+// Example: render dynamically
+Object.keys(galleryImages).forEach(section => {
+  const sectionContainer = document.createElement('div');
+  sectionContainer.classList.add('section');
+  sectionContainer.innerHTML = `<h2>${section.replace(/([A-Z])/g, ' $1')}</h2>`;
+
+  galleryImages[section].forEach(url => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = `${section} image`;
+    img.loading = "lazy";
+    img.classList.add('gallery-img');
+    sectionContainer.appendChild(img);
+  });
+
+  document.body.appendChild(sectionContainer);
+});
+
                 };
 
                 const renderGalleryGrid = (images) => {
@@ -2256,7 +2277,7 @@ if (pageId === 'product-page') {
         line-height: 1.6;
     }
 
-    /* * ▼▼▼ THIS IS YOUR NEW, ADVANCED CSS ▼▼▼
+   /* * ▼▼▼ THIS IS YOUR NEW, ADVANCED CSS ▼▼▼
          * (This replaces your old .whatsapp-popup styles)
          */
         .whatsapp {
@@ -2330,7 +2351,15 @@ if (pageId === 'product-page') {
         }
     </style>
 </head>
-<body
+<body class="bg-gray-100 text-gray-800 p-10">
+
+    <div class="container mx-auto max-w-2xl">
+        <h1 class="text-3xl font-bold mb-4">Test Page</h1>
+        <p class="mb-4">This is some placeholder content on the page. The WhatsApp button should be floating over this content in the bottom-right corner.</p>
+        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.</p>
+        <p>Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa.</p>
+    </div>
+
     <!--  
       ▼▼▼ THIS IS THE HTML ▼▼▼
       NOTE: The class is now "whatsapp" to match your CSS.
@@ -2352,6 +2381,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
