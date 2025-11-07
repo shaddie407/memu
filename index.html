@@ -348,26 +348,19 @@
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95"
         >
-            <button @click="manualClose()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+             <button @click="manualClose()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
             <h2 class="text-4xl font-serif">Get 10% off.</h2>
             <h3 class="text-3xl font-serif mt-1">It's on us.</h3>
             <p class="mt-4 text-sm text-gray-300">Become a member of the Memuci Club and get <strong>10% off your first order</strong>—plus early access to exclusive promos, product launches, and wellness content to make your life feel just a little bit better.</p>
-            <form class="flex gap-2" action="https://formspree.io/f/xkgpdyay" method="post">
-  
-  <input 
-    type="email" 
-    name="email" 
-    placeholder="Enter your email" 
-    class="flex-grow p-2 border border-brand-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent">
-    
-  <button type="submit" class="bg-brand-base text-white py-2 px-4 text-sm font-semibold cta-button rounded-md">Subscribe</button>
-</form>
+            <form @submit.prevent="manualClose()" class="mt-6">
+                <input type="email" placeholder="Email address" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-accent">
+                <button type="submit" class="mt-4 w-full bg-white text-brand-base py-3 font-semibold rounded-md hover:bg-gray-200 transition-colors">CONTINUE</button> 
+            </form>
             <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our <a href="#" data-target="terms-page" class="page-link underline">Terms & Conditions</a>.</p>
         </div>
     </div>
-
 
     <!-- Sale Pop-up Modal -->
     <div id="sale-popup-overlay" class="fixed inset-0 bg-black/70 z-[70] flex items-center justify-center hidden">
@@ -409,7 +402,7 @@
                         this.reappearTimer = setTimeout(() => {
                             this.managePopupCycle();
                         }, 120000); // 2 minutes (120000 ms)
-                    }, 10000); // 10 seconds
+                    }, 10000); // 20 seconds
                 },
                 manualClose() {
                     this.show = false;
