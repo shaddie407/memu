@@ -347,21 +347,74 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95"
-        >
-             <button @click="manualClose()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <!-- 
+      MODAL 1: "GET 10% OFF" SIGNUP FORM 
+      This is visible by default.
+    -->
+    <div id="signup-modal" class="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-75 p-4">
+        <div class="bg-brand-base text-brand-light p-8 sm:p-12 rounded-lg shadow-xl max-w-md w-full relative">
+            
+            <!-- Close Button for Signup Modal -->
+            <button id="close-signup-btn" class="absolute top-4 right-4 text-gray-400 hover:text-brand-light transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
+            
+            <!-- Modal Content -->
             <h2 class="text-4xl font-serif">Get 10% off.</h2>
             <h3 class="text-3xl font-serif mt-1">It's on us.</h3>
-            <p class="mt-4 text-sm text-gray-300">Become a member of the Memuci Club and get <strong>10% off your first order</strong>—plus early access to exclusive promos, product launches, and wellness content to make your life feel just a little bit better.</p>
-            <form @submit.prevent="manualClose()" class="mt-6" action="https://formspree.io/f/xkgpdyay" method="post"> 
-                <input type="email" name="email"  placeholder="Email address" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-accent">
-                <button type="submit" class="mt-4 w-full bg-white text-brand-base py-3 font-semibold rounded-md hover:bg-gray-200 transition-colors">CONTINUE</button> 
+            <p class="mt-4 text-sm text-brand-light opacity-80">Become a member of the Memuci Club and get <strong>10% off your first order</strong>—plus early access to exclusive promos, product launches, and wellness content to make your life feel just a little bit better.</p>
+            
+            <!-- 
+              Signup Form
+              - We give it an ID "signup-form" to target with JavaScript.
+              - The action URL is correct.
+            -->
+            <form id="signup-form" class="mt-6" action="https://formspree.io/f/xkgpdyay" method="post">
+                <input type="email" name="email" placeholder="Email address" required class="w-full p-3 bg-black bg-opacity-25 border border-gray-600 rounded-md text-brand-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-accent">
+                
+                <!-- This is the submit button -->
+                <button type="submit" class="mt-4 w-full bg-brand-accent text-brand-light py-3 font-semibold rounded-md hover:bg-opacity-90 transition-colors">
+                    <!-- We can add a spinner for the loading state -->
+                    <span id="button-text">CONTINUE</span>
+                    <span id="button-spinner" class="hidden">
+                        <svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </button>
             </form>
-            <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our <a href="#" data-target="terms-page" class="page-link underline">Terms & Conditions</a>.</p>
+            
+            <!-- Form Error Message (hidden by default) -->
+            <div id="form-error" class="hidden mt-4 text-sm text-red-400">
+                Something went wrong. Please try again.
+            </div>
+
+            <p class="text-xs text-brand-light opacity-70 mt-4">By continuing, you agree to our <a href="#" class="underline hover:text-brand-light">Terms & Conditions</a>.</p>
         </div>
     </div>
 
+    <!-- 
+      MODAL 2: "CHECK YOUR EMAIL" SUCCESS MESSAGE
+      This is hidden by default using the "hidden" class.
+    -->
+    <div id="success-modal" class="hidden fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-75 p-4">
+        <!-- 
+          Styled to look like the "POOSH" example you sent.
+          Black background, white text, centered.
+        -->
+        <div class="bg-black text-brand-light p-12 sm:p-20 rounded-lg shadow-xl max-w-md w-full relative text-center">
+            
+            <!-- Close Button for Success Modal -->
+            <button id="close-success-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            
+            <!-- Success Message -->
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-wider">CHECK YOUR EMAIL</h2>
+            <p class="text-lg text-gray-300 mt-2">For your 10% off code.</p>
+        </div>
+    </div>
     <!-- Sale Pop-up Modal -->
     <div id="sale-popup-overlay" class="fixed inset-0 bg-black/70 z-[70] flex items-center justify-center hidden">
         <div id="sale-popup-content" class="relative w-full h-full flex items-center justify-center">
@@ -2268,6 +2321,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
