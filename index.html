@@ -2180,6 +2180,80 @@ if (pageId === 'product-page') {
                        }, 1000);
                     }
                 }
+                <!-- 4. JavaScript Logic -->
+    <script>
+        // Get all the elements we need to work with
+        const signupModal = document.getElementById('signup-modal');
+        const successModal = document.getElementById('success-modal');
+        const signupForm = document.getElementById('signup-form');
+        
+        const closeSignupBtn = document.getElementById('close-signup-btn');
+        const closeSuccessBtn = document.getElementById('close-success-btn');
+        
+        const buttonText = document.getElementById('button-text');
+        const buttonSpinner = document.getElementById('button-spinner');
+        const formError = document.getElementById('form-error');
+
+        // --- Event Listeners for Close Buttons ---
+
+        // This replaces your 'manualClose()' function for the signup modal
+        closeSignupBtn.addEventListener('click', () => {
+            signupModal.classList.add('hidden');
+        });
+
+        // This closes the success modal
+        closeSuccessBtn.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+
+        // --- Event Listener for Form Submission ---
+        
+        signupForm.addEventListener('submit', async (e) => {
+            // 1. Prevent the form's default (page reload) behavior
+            e.preventDefault();
+            
+            // 2. Show loading spinner, hide text, hide error
+            buttonText.classList.add('hidden');
+            buttonSpinner.classList.remove('hidden');
+            formError.classList.add('hidden');
+
+            // 3. Prepare form data for sending
+            const formData = new FormData(signupForm);
+
+            try {
+                // 4. Send the data to Formspree using 'fetch'
+                const response = await fetch(signupForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json' // Formspree needs this to reply with JSON
+                    }
+                });
+
+                // 5. Check if Formspree says the submission was OK
+                if (response.ok) {
+                    // SUCCESS!
+                    // Hide the signup modal
+                    signupModal.classList.add('hidden');
+                    // Show the success modal
+                    successModal.classList.remove('hidden');
+                    // Reset the form field
+                    signupForm.reset();
+                } else {
+                    // ERROR!
+                    // Show the error message
+                    formError.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                // Network error or other problem
+                console.error('Submission error:', error);
+                formError.classList.remove('hidden');
+            } finally {
+                // 6. Always hide the spinner and show the text again
+                buttonText.classList.remove('hidden');
+                buttonSpinner.classList.add('hidden');
+            }
             };
             window.addEventListener('scroll', handleScroll);
 
@@ -2321,6 +2395,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
