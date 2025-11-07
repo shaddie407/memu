@@ -910,25 +910,6 @@ const galleryImages = {
     "https://images.unsplash.com/photo-1501876725168-00c445821c9e?auto=format&fit=crop&w=800&q=80"
   ]
 };
-
-// Example: render dynamically
-Object.keys(galleryImages).forEach(section => {
-  const sectionContainer = document.createElement('div');
-  sectionContainer.classList.add('section');
-  sectionContainer.innerHTML = `<h2>${section.replace(/([A-Z])/g, ' $1')}</h2>`;
-
-  galleryImages[section].forEach(url => {
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = `${section} image`;
-    img.loading = "lazy";
-    img.classList.add('gallery-img');
-    sectionContainer.appendChild(img);
-  });
-
-  document.body.appendChild(sectionContainer);
-});
-
                 };
 
                 const renderGalleryGrid = (images) => {
@@ -2381,6 +2362,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
