@@ -1281,6 +1281,41 @@ products: {
                     </div>
                 </div>`;
             };
+            /**
+ * Handles downloading the recipe as a PDF.
+ * This function must be in the global scope.
+ * Make sure your 'createRecipeTextForDownload' function is also accessible.
+ */
+function handleRecipeDownload(event, title) {
+    // 1. Prevent the link from navigating
+    event.preventDefault();
+
+    try {
+        // 2. Get the jsPDF object from the window
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // 3. Use your *existing* function to get the formatted recipe text
+        const recipeText = createRecipeTextForDownload(title); 
+        
+        // 4. Set margins and max width for the text
+        const margin = 15; // 15mm margin
+        const maxWidth = doc.internal.pageSize.getWidth() - (margin * 2);
+
+        // 5. Split the text into lines that fit the PDF width
+        const textLines = doc.splitTextToSize(recipeText, maxWidth);
+
+        // 6. Add the text to the document
+        doc.text(textLines, margin, 20); // Start 20mm from the top
+
+        // 7. Save the PDF
+        doc.save(`${title}.pdf`);
+
+    } catch (e) {
+        console.error("Error generating PDF:", e);
+        alert("Sorry, there was an error creating the PDF.");
+    }
+}
 
            const renderRecipePage = (data) => {
     const recipe = content.recipes[data.title];
@@ -2271,6 +2306,7 @@ if (pageId === 'product-page') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
