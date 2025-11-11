@@ -167,6 +167,18 @@
                 </button>
             </div>
         </nav>
+        <!-- Add print:hidden to your nav -->
+    <nav class="w-full ... print:hidden">
+        ...
+    </nav>
+
+    <!-- This is where your app renders the recipe -->
+    <main id="app-content">
+        <!-- The recipe content will show by default -->
+    </main>
+
+    <!-- Add print:hidden to your footer -->
+    <footer class="w-full ... print:hidden">
         <div id="mobile-menu" class="hidden md:hidden bg-brand-secondary-bg">
              <a href="#" data-target="home-page" class="page-link block py-3 px-6 text-sm hover:bg-brand-bg border-b border-brand-border font-semibold">Home</a>
              <a href="#" data-target="about-page" class="page-link block py-3 px-6 text-sm hover:bg-brand-bg border-b border-brand-border">About</a>
@@ -1404,6 +1416,10 @@ const toBase64 = async (url) => {
             reader.onerror = reject;
             reader.readAsDataURL(blob);
         });
+        } catch (e) {
+        console.error("CORS Error: Cannot fetch image from", url);
+        return null; // Return null if fetching fails
+    }
    };
 
            const renderRecipePage = (data) => {
@@ -1413,6 +1429,17 @@ const toBase64 = async (url) => {
     // The 'recipeText' const is no longer needed here
 
     return `
+    <div class="flex justify-between items-center mb-8 print:hidden">
+                            <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
+                            
+                            <div class="flex items-center gap-2">
+                                <!-- NEW PRINT BUTTON -->
+                                <a href="#" onclick="window.print()" class="inline-block bg-gray-200 text-gray-700 py-2 px-4 text-xs font-semibold cta-button rounded-md">Print</a>
+                                
+                                <!-- YOUR EXISTING DOWNLOAD BUTTON -->
+                                <a href="#" onclick="handleRecipeDownload(event, '${data.title}')" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</a>
+                            </div>
+                         </div>
     <div class="py-16">
         <div class="container mx-auto px-6 max-w-3xl">
             <div class="flex justify-between items-center mb-8">
@@ -2395,6 +2422,7 @@ if (pageId === 'product-page') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
