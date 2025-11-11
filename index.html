@@ -495,11 +495,11 @@ products: {
     price: 1600,
     category: "fashion",
     description: "<p>A timeless premium cotton t-shirt from the Memuci lifestyle brand. Available in Black, White, Maroon, and Navy Blue.</p>",
-    defaultImage: "https://scontent.fnbo9-1.fna.fbcdn.net/v/t39.30808-6/574977409_122153007710405844_4258779277454880366_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=JS8T9KUQf5QQ7kNvwF5tfjQ&_nc_oc=AdkcWyKnjoFrrYZKSEvt58mnmPGW2Fvkxz_f-TddT4zCUT5KxxpWII3YA2KscOiTeqc&_nc_zt=23&_nc_ht=scontent.fnbo9-1.fna&_nc_gid=bYri2IzJSda2yeEmvwMU3w&oh=00_AfiMe7SP5X2hbLuUWBi-uUC7vWJi5ef-uDXKlRF8LlwZMA&oe=69121C57", // Image for the Black T-Shirt
+    defaultImage: "https://i.pinimg.com/736x/34/5b/f9/345bf902e89d58c9591f648b565aadb1.jpg", // Image for the Black T-Shirt
     variants: [
       {
         color: "Black",
-        image: "https://scontent.fnbo9-1.fna.fbcdn.net/v/t39.30808-6/574977409_122153007710405844_4258779277454880366_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=JS8T9KUQf5QQ7kNvwF5tfjQ&_nc_oc=AdkcWyKnjoFrrYZKSEvt58mnmPGW2Fvkxz_f-TddT4zCUT5KxxpWII3YA2KscOiTeqc&_nc_zt=23&_nc_ht=scontent.fnbo9-1.fna&_nc_gid=bYri2IzJSda2yeEmvwMU3w&oh=00_AfiMe7SP5X2hbLuUWBi-uUC7vWJi5ef-uDXKlRF8LlwZMA&oe=69121C57",
+        image: "https://i.pinimg.com/736x/34/5b/f9/345bf902e89d58c9591f648b565aadb1.jpg",
       },
       {
         color: "White",
@@ -1281,23 +1281,59 @@ products: {
                     </div>
                 </div>`;
             };
+// Add this entire new function to your JavaScript file
+const downloadRecipeAsPDF = (title) => {
+    // Get the part of the page we want to download
+    const recipeElement = document.getElementById('recipe-to-print');
+    
+    // Find the buttons to hide them from the "screenshot"
+    const buttons = recipeElement.querySelector('.print\\:hidden');
+    if (buttons) {
+        buttons.style.display = 'none'; // Hide buttons
+    }
 
+    // Use html2canvas to take the "screenshot"
+    html2canvas(recipeElement, { 
+        scale: 2 // Use a higher scale for better image quality
+    }).then(canvas => {
+        // Show the buttons again, now that we have our image
+        if (buttons) {
+            buttons.style.display = 'flex'; // Show buttons again
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Calculate PDF dimensions
+        const pdf = new jsPDF('p', 'mm', 'a4'); // A4 page in portrait
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        // Add the image to the PDF and save it
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${title}.pdf`); // This triggers the direct download
+    });
+};
            const renderRecipePage = (data) => {
             const recipe = content.recipes[data.title];
             if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
-            // const recipeText = createRecipeTextForDownload(data.title); // This is no longer needed
 
             return `
-            <div class="py-16">
+            <div class="py-16 print:py-8">
                 <div class="container mx-auto px-6 max-w-3xl" id="recipe-to-print">
+
+                    <div class="hidden print:block text-lg font-serif mb-6 text-center">
+                        memuci lifestyle by car...
+                    </div>
                     <div class="flex justify-between items-center mb-8 print:hidden">
                         <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
                         
                         <div class="flex gap-x-2">
                             <button onclick="window.print()" class="inline-block bg-gray-200 text-brand-base py-2 px-4 text-xs font-semibold cta-button rounded-md">Print</button>
-                            <button onclick="window.print()" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Save as PDF</button>
+                            
+                            <button onclick="downloadRecipeAsPDF('${data.title}')" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</button>
                         </div>
-                        </div>
+                    </div>
                     <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
                     <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
                         <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
@@ -1312,8 +1348,11 @@ products: {
                         <h3>Instructions</h3>
                         <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
                     </div>
-                </div>
-            </div>`;
+
+                    <div class="hidden print:block text-sm text-center mt-8 pt-4 border-t border-gray-300">
+                        memuci@2025
+                    </div>
+                    </div>`;
         };
         
         const renderRecipesCollectionPage = () => {
@@ -2270,8 +2309,11 @@ if (pageId === 'product-page') {
             <strong>Chat with us</strong>
         </div>
     </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
