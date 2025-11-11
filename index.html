@@ -1276,14 +1276,7 @@ products: {
                         <p class="text-sm text-brand-gray mt-4">By ${article.author}</p>
                         <img src="${article.image}" class="w-full rounded-lg mt-8 mb-12">
                         <div class="prose text-brand-base">${article.body}</div>
-                        ${relatedProductsHtml}
-                        ${relatedArticlesHtml}
-                    </div>
-                </div>`;
-            };
-
-         
-      // --- 5. YOUR UPDATED FUNCTIONS ---
+                     // --- 5. YOUR UPDATED FUNCTIONS ---
 // (These function definitions are perfect as they are)
 
 const renderRecipePage = (data) => {
@@ -1368,6 +1361,79 @@ const renderRecipesCollectionPage = () => {
 // We define 'app' here so 'renderPage' can access it,
 // but we will assign it *inside* the event listener.
 let app;
+
+// This function MUST be global (defined outside any listener)
+// so the inline 'onclick' attribute can find it.
+function route(page) {
+    // Simple hash-based routing
+    window.location.hash = page;
+}
+
+// This function can also be global
+function renderPage() {
+    // Add a "guard clause" in case content or app isn't ready
+    if (!app || typeof content === 'undefined' || !content.recipes) {
+        // If app exists, show an error. If not, this will run again once app is found.
+        if (app) {
+            app.innerHTML = `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Error: Recipes could not be loaded.</h1></div>`;
+        }
+        return;
+    }
+
+    const hash = window.location.hash.substring(1); // Get page from URL
+    
+    // Check all content types, starting with recipes
+    if (content.recipes[hash]) {
+        app.innerHTML = renderRecipePage({ title: hash });
+    } 
+    // ***** IMPORTANT *****
+    // You must also add your OTHER page types here, like articles
+    else if (content.articles[hash]) {
+         app.innerHTML = renderArticlePage({ title: hash });
+    }
+    // Add more 'else if' blocks for products, etc.
+    else {
+        // Otherwise, render the main collection page (or your default homepage)
+        // For now, it defaults to recipes.
+        app.innerHTML = renderRecipesCollectionPage();
+    }
+    window.scrollTo(0, 0); // Scroll to top on page change
+}
+
+// --- 7. APP INITIALIZATION ---
+// THIS IS THE FIX: We wait for the HTML to be fully loaded
+// before we try to find '#app' and run the code.
+document.addEventListener('DOMContentLoaded', () => {
+    // Now it's safe to find the 'app' element
+    app = document.getElementById('app');
+
+    // Always a good idea to check if it was found
+    if (app) {
+        // Listen for hash changes
+        window.addEventListener('hashchange', renderPage);
+        
+        // Initial page load
+        renderPage();
+    } else {
+        console.error("Fatal Error: '#app' element not found in the DOM.");
+    }
+}); 
+        // ...
+    const hash = window.location.hash.substring(1); 
+    
+    if (content.recipes[hash]) {
+        app.innerHTML = renderRecipePage({ title: hash });
+    } 
+    // THIS IS THE NEW PART
+    else if (content.articles[hash]) {
+         app.innerHTML = renderArticlePage({ title: hash });
+    }
+    // END NEW PART
+    else {
+        // Default page
+        app.innerHTML = renderRecipesCollectionPage();
+    }
+    // ...
 
 // This function MUST be global (defined outside any listener)
 // so the inline 'onclick' attribute can find it.
@@ -2457,6 +2523,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
