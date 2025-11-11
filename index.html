@@ -1281,70 +1281,9 @@ products: {
                     </div>
                 </div>`;
             };
-
-           /**
- * Renders the full recipe page with print and download buttons.
- */
-const renderRecipePage = (data) => {
-    const recipe = content.recipes[data.title];
-    if (!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
-
-    return `
-    <div class="py-16">
-        <div class="container mx-auto px-6 max-w-3xl">
-            
-            <div class="flex justify-between items-center mb-8 print:hidden">
-                <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
-                
-                <div class="flex items-center gap-2">
-                    <a href="#" onclick="window.print()" class="inline-block bg-gray-200 text-gray-700 py-2 px-4 text-xs font-semibold cta-button rounded-md">Print</a>
-                    
-                    <a href="#" onclick="handleRecipeDownload(event, '${data.title}')" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</a>
-                </div>
-            </div>
-            
-            <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
-            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
-                <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
-                <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
-                <span><strong>Servings:</strong> ${recipe.servings}</span>
-            </div>
-            <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
-            <div class="prose text-brand-base">
-                <p>${recipe.description}</p>
-                <h3>Ingredients</h3>
-                <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-                <h3>Instructions</h3>
-                <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
-            </div>
-        </div>
-    </div>`;
-};
-
-/**
- * Fetches an image and converts it to a Base64 data URL.
- * NOTE: This must be in the global scope.
- * This will fail if the image is on a different domain (CORS error).
- */
-const toBase64 = async (url) => {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    } catch (e) {
-        console.error("CORS Error: Cannot fetch image from", url);
-        return null; // Return null if fetching fails
-    }
-};
-
 /**
  * Handles downloading the recipe as a PDF with image and layout.
- * We attach it to 'window' to make it globally accessible from the onclick attribute.
+ * Make sure this is on the global scope (window.handleRecipeDownload)
  */
 window.handleRecipeDownload = async function(event, title) {
     event.preventDefault();
@@ -1371,8 +1310,10 @@ window.handleRecipeDownload = async function(event, title) {
         let yPos = 20; // Y-position tracker
 
         // 4. Load and Add Image
+        // This is the async part. We wait for the image to be converted.
         const imgData = await toBase64(recipe.image);
         if (imgData) {
+            // We'll make the image fit the content width
             const imgProps = doc.getImageProperties(imgData);
             const imgHeight = (imgProps.height * contentWidth) / imgProps.width;
             doc.addImage(imgData, imgProps.format, margin, yPos, contentWidth, imgHeight);
@@ -1385,9 +1326,10 @@ window.handleRecipeDownload = async function(event, title) {
         // 5. Add Title
         doc.setFontSize(22);
         doc.setFont('times', 'bold');
+        // Split title in case it's too long
         const titleLines = doc.splitTextToSize(title, contentWidth);
         doc.text(titleLines, margin, yPos);
-        yPos += (titleLines.length * 8) + 5;
+        yPos += (titleLines.length * 8) + 5; // Adjust yPos based on lines
 
         // 6. Add Prep/Cook Time
         doc.setFontSize(10);
@@ -1411,7 +1353,8 @@ window.handleRecipeDownload = async function(event, title) {
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         for (const item of recipe.ingredients) {
-            const itemLines = doc.splitTextToSize(item, contentWidth - 5);
+            // Add bullet point
+            const itemLines = doc.splitTextToSize(item, contentWidth - 5); // Indent a bit
             doc.text('•', margin, yPos + 0.5); // Bullet
             doc.text(itemLines, margin + 5, yPos); // Text
             yPos += (itemLines.length * 5) + 2;
@@ -1427,6 +1370,7 @@ window.handleRecipeDownload = async function(event, title) {
         doc.setFont('helvetica', 'normal');
         let step = 1;
         for (const item of recipe.instructions) {
+            // Add number
             const itemLines = doc.splitTextToSize(item, contentWidth - 5);
             doc.text(step + ".", margin, yPos); // Number
             doc.text(itemLines, margin + 5, yPos); // Text
@@ -1444,79 +1388,8 @@ window.handleRecipeDownload = async function(event, title) {
         // 11. Reset button
         button.innerText = "Download PDF";
         button.disabled = false;
-    };
-            };
-            // REPLACE your old renderProductPage function with this one
-
-const renderProductPage = (data) => {
-  const product = content.products[data.title];
-  if (!product) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Product Not Found</h1></div>`;
-
-  // Get the first variant as the default
-  const defaultVariant = product.variants[0];
-
-  return `
-   <div class="py-12 bg-white">
-     <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-         <div class="sticky top-28 bg-brand-bg rounded-lg p-2">
-             
-             <img src="${defaultVariant.image}" id="main-product-image" class="w-full h-full object-cover rounded-md">
-         
-         </div>
-         <div class="pt-4">
-             <a href="#" data-target="shop-page" class="page-link text-xs uppercase tracking-widest text-brand-gray mb-4 inline-block">&larr; Back to shop</a>
-             <h1 class="text-3xl md:text-4xl font-serif">${data.title}</h1>
-             <p class="text-2xl text-brand-base font-medium mt-3">Ksh ${product.price.toLocaleString()}</p>
-             
-             ${product.variants.length > 1 ? `
-               <div class="mt-6">
-                 <p class="text-sm font-semibold text-brand-gray mb-2">Color: <span id="selected-color-name">${defaultVariant.color}</span></p>
-                 <div class="flex flex-wrap gap-2">
-                   ${product.variants.map(variant => `
-                     <button
-                       class="color-swatch w-10 h-10 rounded-full border-2 p-1 transition-all"
-                       data-image="${variant.image}"
-                       data-color="${variant.color}"
-                       title="${variant.color}"
-                     >
-                       <div class="w-full h-full rounded-full" style="background-color: ${variant.color.toLowerCase().replace('navy blue', 'navy')}"></div>
-                     </button>
-                   `).join('')}
-                 </div>
-               </div>
-             ` : ''}
-
-             <div class="mt-6 text-sm text-green-600 flex items-center gap-2">
-                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                 <span>In stock, ready to ship</span>
-             </div>
-
-             <div class="mt-8 flex flex-col gap-3">
-                 <button id="buy-now-btn" class="w-full bg-brand-base text-white py-4 text-sm font-semibold cta-button uppercase tracking-wider rounded-md">Buy Now</button>
-                 
-                 <button id="add-to-cart-btn" 
-                   class="w-full border border-brand-base text-brand-base py-4 text-sm font-semibold uppercase tracking-wider rounded-md hover:bg-brand-base hover:text-white transition-colors"
-                   data-title="${data.title}"
-                   data-color="${defaultVariant.color}"
-                 >
-                   Add to Cart
-                 </button>
-
-             </div>
-             
-             <div class="mt-8 border-t border-brand-border">
-                <div class="py-4 border-b border-brand-border" x-data="{ open: true }">
-                  <h3 class="font-semibold cursor-pointer flex justify-between items-center" @click="open = !open">
-                    Description
-                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                  </h3>
-                  <div class="prose text-sm mt-2" x-show="open" style="display: none;" x-transition>${product.description}</div>
-                </div>
-             </div>
-         </div>
-     </div>
-   </div>;`
-};
+    }
+}
             const renderCartPage = () => {
                 const total = cart.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
                 return `
@@ -1556,7 +1429,58 @@ const renderProductPage = (data) => {
                     </div>
                 </div>`;
             };
+            const renderRecipePage = (data) => {
+    const recipe = content.recipes[data.title];
+    if (!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
+    
+    // The 'recipeText' const is no longer needed here
 
+    return `
+    <div class="py-16">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="flex justify-between items-center mb-8">
+                <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
+                <div class="flex items-center gap-2">
+                                <!-- NEW PRINT BUTTON -->
+                                <a href="#" onclick="window.print()" class="inline-block bg-gray-200 text-gray-700 py-2 px-4 text-xs font-semibold cta-button rounded-md">Print</a>
+                <a href="#" onclick="handleRecipeDownload(event, '${data.title}')" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</a>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
+                <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
+                <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
+                <span><strong>Servings:</strong> ${recipe.servings}</span>
+            </div>
+            <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
+            <div class="prose text-brand-base">
+                <p>${recipe.description}</p>
+                <h3>Ingredients</h3>
+                <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+                <h3>Instructions</h3>
+                <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
+            </div>
+        </div>
+    </div`;
+};
+/**
+ * Fetches an image and converts it to a Base64 data URL.
+ * NOTE: This will fail if the image is on a different domain (CORS error).
+ */
+const toBase64 = async (url) => {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (e) {
+        console.error("CORS Error: Cannot fetch image from", url);
+        return null; // Return null if fetching fails
+    }
+};
             const renderShopPage = () => {
     return `
     <section class="relative h-[50vh] bg-cover bg-center text-white flex items-center justify-center text-center" style="background-image: url('https://cdn.pixabay.com/photo/2025/05/20/10/57/t-shirt-9611332_960_720.jpg');">
@@ -2365,6 +2289,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
