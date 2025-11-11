@@ -495,11 +495,11 @@ products: {
     price: 1600,
     category: "fashion",
     description: "<p>A timeless premium cotton t-shirt from the Memuci lifestyle brand. Available in Black, White, Maroon, and Navy Blue.</p>",
-    defaultImage: "https://i.pinimg.com/736x/34/5b/f9/345bf902e89d58c9591f648b565aadb1.jpg", // Image for the Black T-Shirt
+    defaultImage: "https://scontent.fnbo9-1.fna.fbcdn.net/v/t39.30808-6/574977409_122153007710405844_4258779277454880366_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=JS8T9KUQf5QQ7kNvwF5tfjQ&_nc_oc=AdkcWyKnjoFrrYZKSEvt58mnmPGW2Fvkxz_f-TddT4zCUT5KxxpWII3YA2KscOiTeqc&_nc_zt=23&_nc_ht=scontent.fnbo9-1.fna&_nc_gid=bYri2IzJSda2yeEmvwMU3w&oh=00_AfiMe7SP5X2hbLuUWBi-uUC7vWJi5ef-uDXKlRF8LlwZMA&oe=69121C57", // Image for the Black T-Shirt
     variants: [
       {
         color: "Black",
-        image: "https://i.pinimg.com/736x/34/5b/f9/345bf902e89d58c9591f648b565aadb1.jpg",
+        image: "https://scontent.fnbo9-1.fna.fbcdn.net/v/t39.30808-6/574977409_122153007710405844_4258779277454880366_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=JS8T9KUQf5QQ7kNvwF5tfjQ&_nc_oc=AdkcWyKnjoFrrYZKSEvt58mnmPGW2Fvkxz_f-TddT4zCUT5KxxpWII3YA2KscOiTeqc&_nc_zt=23&_nc_ht=scontent.fnbo9-1.fna&_nc_gid=bYri2IzJSda2yeEmvwMU3w&oh=00_AfiMe7SP5X2hbLuUWBi-uUC7vWJi5ef-uDXKlRF8LlwZMA&oe=69121C57",
       },
       {
         color: "White",
@@ -1281,134 +1281,72 @@ products: {
                     </div>
                 </div>`;
             };
-const downloadRecipeAsPDF = (title) => {
-    const recipeElement = document.getElementById('recipe-to-print');
-    const buttons = recipeElement.querySelector('.print\\:hidden');
-    if (buttons) buttons.style.display = 'none';
 
-    html2canvas(recipeElement, { scale: 2 }).then(canvas => {
-        if (buttons) buttons.style.display = 'flex';
+            const renderRecipePage = (data) => {
+                const recipe = content.recipes[data.title];
+                if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
+                const recipeText = createRecipeTextForDownload(data.title);
 
-        const { jsPDF } = window.jspdf;
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-        // Convert PDF to blob for mobile-friendly download
-        const blob = pdf.output('blob');
-        const blobUrl = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = `${title}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-    });
-};
-            @media print {
-  @page {
-    margin: 0;
-  }
-
-  body {
-    margin: 0;
-  }
-
-  /* Optional: Hide any site header/footer sections */
-  header, footer {
-    display: none !important;
-  }
-
-  /* You already hide non-printable sections using print:hidden */
-  .print\:hidden {
-    display: none !important;
-  }
-
-  .print\:block {
-    display: block !important;
-  }
-}
-
-           const renderRecipePage = (data) => {
-            const recipe = content.recipes[data.title];
-            if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
-
-            return `
-            <div class="py-16 print:py-8">
-                <div class="container mx-auto px-6 max-w-3xl" id="recipe-to-print">
-
-                    <div class="hidden print:block text-lg font-serif mb-6 text-center">
-                        memuci lifestyle by car...
-                    </div>
-                    <div class="flex justify-between items-center mb-8 print:hidden">
-                        <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
-                        
-                        <div class="flex gap-x-2">
-                            <button onclick="window.print()" class="inline-block bg-gray-200 text-brand-base py-2 px-4 text-xs font-semibold cta-button rounded-md">Print</button>
-                            
-                            <button onclick="downloadRecipeAsPDF('${data.title}')" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</button>
+                return `
+                <div class="py-16">
+                    <div class="container mx-auto px-6 max-w-3xl">
+                         <div class="flex justify-between items-center mb-8">
+                            <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
+                            <a href="data:text/plain;charset=utf-8,${recipeText}" download="${data.title}.txt" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download Recipe</a>
+                         </div>
+                        <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
+                        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
+                            <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
+                            <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
+                            <span><strong>Servings:</strong> ${recipe.servings}</span>
+                        </div>
+                        <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
+                        <div class="prose text-brand-base">
+                            <p>${recipe.description}</p>
+                            <h3>Ingredients</h3>
+                            <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+                            <h3>Instructions</h3>
+                            <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
                         </div>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
-                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
-                        <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
-                        <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
-                        <span><strong>Servings:</strong> ${recipe.servings}</span>
-                    </div>
-                    <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
-                    <div class="prose text-brand-base">
-                        <p>${recipe.description}</p>
-                        <h3>Ingredients</h3>
-                        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-                        <h3>Instructions</h3>
-                        <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
-                    </div>
-
-                    <div class="hidden print:block text-sm text-center mt-8 pt-4 border-t border-gray-300">
-                        By Memuci Lifestyle
-                    </div>
-                    </div>`;
-        };
-        
-        const renderRecipesCollectionPage = () => {
-            const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
+                </div>`;
+            };
             
-            const renderTag = (tag) => {
-                let color = 'bg-gray-200 text-gray-700';
-                if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
-                if(!tag) return '';
-                return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
-            }
+            const renderRecipesCollectionPage = () => {
+                const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
+                
+                const renderTag = (tag) => {
+                    let color = 'bg-gray-200 text-gray-700';
+                    if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
+                    if(!tag) return '';
+                    return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
+                }
 
-            return `
-            <div class="bg-brand-secondary-bg py-16 px-6">
-                <div class="container mx-auto">
-                    <div class="text-center max-w-2xl mx-auto">
-                        <h1 class="text-4xl font-serif text-brand-base">Our Curated Recipes</h1>
-                        <p class="text-lg text-brand-gray mt-2">Delicious and intentional recipes for every occasion.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-                        ${allRecipes.map(recipe => `
-                            <a href="#" class="page-link group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow" data-target="recipe-page" data-title="${recipe.title}">
-                                <div class="relative">
-                                    <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-56 object-cover">
-                                    <div class="absolute top-3 left-3 flex flex-wrap gap-2">
-                                        ${recipe.tags.map(tag => renderTag(tag)).join('')}
+                return `
+                <div class="bg-brand-secondary-bg py-16 px-6">
+                    <div class="container mx-auto">
+                        <div class="text-center max-w-2xl mx-auto">
+                            <h1 class="text-4xl font-serif text-brand-base">Our Curated Recipes</h1>
+                            <p class="text-lg text-brand-gray mt-2">Delicious and intentional recipes for every occasion.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                            ${allRecipes.map(recipe => `
+                                <a href="#" class="page-link group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow" data-target="recipe-page" data-title="${recipe.title}">
+                                    <div class="relative">
+                                        <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-56 object-cover">
+                                        <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+                                            ${recipe.tags.map(tag => renderTag(tag)).join('')}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="p-5">
-                                    <h3 class="font-serif text-lg text-brand-base group-hover:text-brand-accent transition-colors">${recipe.title}</h3>
-                                    <p class="text-sm text-brand-gray mt-2">${recipe.cookTime} · ${recipe.calories} kcal</p>
-                                </div>
-                            </a>
-                        `).join('')}
+                                    <div class="p-5">
+                                        <h3 class="font-serif text-lg text-brand-base group-hover:text-brand-accent transition-colors">${recipe.title}</h3>
+                                        <p class="text-sm text-brand-gray mt-2">${recipe.cookTime} · ${recipe.calories} kcal</p>
+                                    </div>
+                                </a>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
-            </div>
                 `;
             };
             // REPLACE your old renderProductPage function with this one
@@ -1450,14 +1388,6 @@ const renderProductPage = (data) => {
                  </div>
                </div>
              ` : ''}
-             <style>
-  @media print {
-    /* This rule applies ONLY when printing */
-    header, footer {
-      display: none !important;
-    }
-  }
-</style>
 
              <div class="mt-6 text-sm text-green-600 flex items-center gap-2">
                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
@@ -2336,15 +2266,8 @@ if (pageId === 'product-page') {
             <strong>Chat with us</strong>
         </div>
     </a>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <img src="${recipe.image}" crossorigin="anonymous" class="w-full rounded-lg mt-8 mb-12">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
-
-
-
-
 
 
 
