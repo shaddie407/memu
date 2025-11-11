@@ -1282,7 +1282,7 @@ products: {
                 </div>`;
             };
 
-          const renderRecipePage = (data) => {
+         const renderRecipePage = (data) => {
     const recipe = content.recipes[data.title];
     if (!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
     
@@ -1312,7 +1312,7 @@ products: {
             </div>
         </div>
     </div>`;
-}; 
+};
          const renderRecipesCollectionPage = () => {
                 const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
                 
@@ -2397,6 +2397,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
