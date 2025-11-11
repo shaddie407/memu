@@ -1276,6 +1276,16 @@ products: {
                         <p class="text-sm text-brand-gray mt-4">By ${article.author}</p>
                         <img src="${article.image}" class="w-full rounded-lg mt-8 mb-12">
                         <div class="prose text-brand-base">${article.body}</div>
+                           ${relatedProductsHtml}
+
+                        ${relatedArticlesHtml}
+
+                    </div>
+
+                </div>`;
+
+            };
+                     
                      // --- 5. YOUR UPDATED FUNCTIONS ---
 // (These function definitions are perfect as they are)
 
@@ -2523,6 +2533,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
