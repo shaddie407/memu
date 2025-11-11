@@ -1282,71 +1282,193 @@ products: {
                 </div>`;
             };
 
-            const renderRecipePage = (data) => {
-                const recipe = content.recipes[data.title];
-                if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
-                const recipeText = createRecipeTextForDownload(data.title);
+            // MODIFICATION: Add this new function to handle the PDF download
+const handleDownloadPDF = (title) => {
+    // 1. Get the element to convert to PDF
+    const element = document.getElementById('recipe-content');
 
-                return `
-                <div class="py-16">
-                    <div class="container mx-auto px-6 max-w-3xl">
-                         <div class="flex justify-between items-center mb-8">
-                            <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
-                            <a href="data:text/plain;charset=utf-8,${recipeText}" download="${data.title}.txt" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download Recipe</a>
-                         </div>
-                        <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
-                        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
-                            <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
-                            <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
-                            <span><strong>Servings:</strong> ${recipe.servings}</span>
-                        </div>
-                        <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
-                        <div class="prose text-brand-base">
-                            <p>${recipe.description}</p>
-                            <h3>Ingredients</h3>
-                            <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-                            <h3>Instructions</h3>
-                            <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
-                        </div>
-                    </div>
-                </div>`;
-            };
+    // 2. Define configuration options
+    const opt = {
+      margin:       [0.5, 0.5, 0.5, 0.5], // [top, left, bottom, right] in inches
+      filename:     `${title}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { 
+          scale: 2, 
+          useCORS: true // Add this if your images are hosted on a different domain
+      },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      // The library automatically respects data-html2pdf-ignore="true"
+    };
+
+    // 3. Run the conversion and save the file
+    html2pdf().from(element).set(opt).save();
+};
+
+const renderRecipePage = (data) => {
+    const recipe = content.recipes[data.title];
+    if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
+    
+    // Note: The 'recipeText' variable is no longer needed for the PDF download
+    // const recipeText = createRecipeTextForDownload(data.title); 
+
+    return `
+    <div class="py-16">
+        <div class="container mx-auto px-6 max-w-3xl" id="recipe-content">
             
-            const renderRecipesCollectionPage = () => {
-                const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
+            <div class="flex justify-between items-center mb-8" data-html2pdf-ignore="true">
+                <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
                 
-                const renderTag = (tag) => {
-                    let color = 'bg-gray-200 text-gray-700';
-                    if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
-                    if(!tag) return '';
-                    return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
-                }
+                <button id="download-pdf-btn" data-title="${data.title}" class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">Download PDF</button>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
+                <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
+                <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
+                <span><strong>Servings:</strong> ${recipe.servings}</span>
+            </div>
+            <img src="${recipe.image}" class="w-full rounded-lg mt-8 mb-12">
+            <div class="prose text-brand-base">
+                <p>${recipe.description}</p>
+                <h3>Ingredients</h3>
+                <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+                <h3>Instructions</h3>
+                <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
+            </div>
+        </div>
+    </div>`;
+};
 
-                return `
-                <div class="bg-brand-secondary-bg py-16 px-6">
-                    <div class="container mx-auto">
-                        <div class="text-center max-w-2xl mx-auto">
-                            <h1 class="text-4xl font-serif text-brand-base">Our Curated Recipes</h1>
-                            <p class="text-lg text-brand-gray mt-2">Delicious and intentional recipes for every occasion.</p>
+// MODIFICATION: Add a function to attach listeners after rendering
+// You need to call this function *after* you set the innerHTML of your page
+const attachPageListeners = () => {
+    const downloadBtn = document.getElementById('download-pdf-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            const title = downloadBtn.dataset.title;
+            handleDownloadPDF(title);
+        });
+    }
+    
+    // You would also attach other listeners here, like for your color swatches
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            // ... your color swatch logic ...
+            // e.g., document.getElementById('main-product-image').src = swatch.dataset.image;
+            // document.getElementById('selected-color-name').textContent = swatch.dataset.color;
+        });
+    });
+
+    // ... any other listeners for 'buy-now-btn', 'add-to-cart-btn', etc.
+};
+
+const renderRecipesCollectionPage = () => {
+    const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
+    
+    const renderTag = (tag) => {
+        let color = 'bg-gray-200 text-gray-700';
+        if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
+        if(!tag) return '';
+        return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
+    }
+
+    return `
+    <div class="bg-brand-secondary-bg py-16 px-6">
+        <div class="container mx-auto">
+            <div class="text-center max-w-2xl mx-auto">
+                <h1 class="text-4xl font-serif text-brand-base">Our Curated Recipes</h1>
+                <p class="text-lg text-brand-gray mt-2">Delicious and intentional recipes for every occasion.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                ${allRecipes.map(recipe => `
+                    <a href="#" class="page-link group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow" data-target="recipe-page" data-title="${recipe.title}">
+                        <div class="relative">
+                            <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-56 object-cover">
+                            <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+                                ${recipe.tags.map(tag => renderTag(tag)).join('')}
+                            </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-                            ${allRecipes.map(recipe => `
-                                <a href="#" class="page-link group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow" data-target="recipe-page" data-title="${recipe.title}">
-                                    <div class="relative">
-                                        <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-56 object-cover">
-                                        <div class="absolute top-3 left-3 flex flex-wrap gap-2">
-                                            ${recipe.tags.map(tag => renderTag(tag)).join('')}
-                                        </div>
-                                    </div>
-                                    <div class="p-5">
-                                        <h3 class="font-serif text-lg text-brand-base group-hover:text-brand-accent transition-colors">${recipe.title}</h3>
-                                        <p class="text-sm text-brand-gray mt-2">${recipe.cookTime} · ${recipe.calories} kcal</p>
-                                    </div>
-                                </a>
-                            `).join('')}
+                        <div class="p-5">
+                            <h3 class="font-serif text-lg text-brand-base group-hover:text-brand-accent transition-colors">${recipe.title}</h3>
+                            <p class="text-sm text-brand-gray mt-2">${recipe.cookTime} · ${recipe.calories} kcal</p>
                         </div>
-                    </div>
-                </div>
+                    </a>
+                `).join('')}
+            </div>
+        </div>
+    </div>
+    `;
+};
+// REPLACE your old renderProductPage function with this one
+
+const renderProductPage = (data) => {
+  const product = content.products[data.title];
+  if (!product) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Product Not Found</h1></div>`;
+
+  // Get the first variant as the default
+  const defaultVariant = product.variants[0];
+
+  return `
+   <div class="py-12 bg-white">
+     <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+         <div class="sticky top-28 bg-brand-bg rounded-lg p-2">
+             
+             <img src="${defaultVariant.image}" id="main-product-image" class="w-full h-full object-cover rounded-md">
+         
+         </div>
+  _      <div class="pt-4">
+             <a href="#" data-target="shop-page" class="page-link text-xs uppercase tracking-widest text-brand-gray mb-4 inline-block">&larr; Back to shop</a>
+             <h1 class="text-3xl md:text-4xl font-serif">${data.title}</h1>
+             <p class="text-2xl text-brand-base font-medium mt-3">Ksh ${product.price.toLocaleString()}</p>
+             
+             ${product.variants.length > 1 ? `
+               <div class="mt-6">
+                 <p class="text-sm font-semibold text-brand-gray mb-2">Color: <span id="selected-color-name">${defaultVariant.color}</span></p>
+                 <div class="flex flex-wrap gap-2">
+                   ${product.variants.map(variant => `
+                     <button
+                       class="color-swatch w-10 h-10 rounded-full border-2 p-1 transition-all"
+                       data-image="${variant.image}"
+                       data-color="${variant.color}"
+                       title="${variant.color}"
+                Type  >
+                       <div class="w-full h-full rounded-full" style="background-color: ${variant.color.toLowerCase().replace('navy blue', 'navy')}"></div>
+                     </button>
+                   `).join('')}
+                 </div>
+          _     </div>
+             ` : ''}
+
+             <div class="mt-6 text-sm text-green-600 flex items-center gap-2">
+                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                 <span>In stock, ready to ship</span>
+             </div>
+
+             <div class="mt-8 flex flex-col gap-3">
+                 <button id="buy-now-btn" class="w-full bg-brand-base text-white py-4 text-sm font-semibold cta-button uppercase tracking-wider rounded-md">Buy Now</button>
+                 
+                 <button id="add-to-cart-btn" 
+                   class="w-full border border-brand-base text-brand-base py-4 text-sm font-semibold uppercase tracking-wider rounded-md hover:bg-brand-base hover:text-white transition-colors"
+                   data-title="${data.title}"
+                   data-color="${defaultVariant.color}"
+                 >
+                   Add to Cart
+                 </button>
+
+             </div>
+             
+s           <div class="mt-8 border-t border-brand-border">
+A             <div class="py-4 border-b border-brand-border" x-data="{ open: true }">
+                  <h3 class="font-semibold cursor-pointer flex justify-between items-center" @click="open = !open">
+                    Description
+                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </h3>
+                  <div class="prose text-sm mt-2" x-show="open" style="display: none;" x-transition>${product.description}</div>
+s             </div>
+             </div>
+         </div>
+     </div>
+   </div>
                 `;
             };
             // REPLACE your old renderProductPage function with this one
@@ -2268,6 +2390,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
