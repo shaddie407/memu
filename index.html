@@ -1281,39 +1281,58 @@ products: {
                     </div>
                 </div>`;
             };
-// Add this entire new function to your JavaScript file
 const downloadRecipeAsPDF = (title) => {
-    // Get the part of the page we want to download
     const recipeElement = document.getElementById('recipe-to-print');
-    
-    // Find the buttons to hide them from the "screenshot"
     const buttons = recipeElement.querySelector('.print\\:hidden');
-    if (buttons) {
-        buttons.style.display = 'none'; // Hide buttons
-    }
+    if (buttons) buttons.style.display = 'none';
 
-    // Use html2canvas to take the "screenshot"
-    html2canvas(recipeElement, { 
-        scale: 2 // Use a higher scale for better image quality
-    }).then(canvas => {
-        // Show the buttons again, now that we have our image
-        if (buttons) {
-            buttons.style.display = 'flex'; // Show buttons again
-        }
-        
+    html2canvas(recipeElement, { scale: 2 }).then(canvas => {
+        if (buttons) buttons.style.display = 'flex';
+
         const { jsPDF } = window.jspdf;
         const imgData = canvas.toDataURL('image/png');
-        
-        // Calculate PDF dimensions
-        const pdf = new jsPDF('p', 'mm', 'a4'); // A4 page in portrait
+        const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        // Add the image to the PDF and save it
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${title}.pdf`); // This triggers the direct download
+
+        // Convert PDF to blob for mobile-friendly download
+        const blob = pdf.output('blob');
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `${title}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
     });
 };
+            @media print {
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  /* Optional: Hide any site header/footer sections */
+  header, footer {
+    display: none !important;
+  }
+
+  /* You already hide non-printable sections using print:hidden */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+}
+
            const renderRecipePage = (data) => {
             const recipe = content.recipes[data.title];
             if(!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
@@ -2322,6 +2341,7 @@ if (pageId === 'product-page') {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
