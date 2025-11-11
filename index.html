@@ -1281,12 +1281,7 @@ products: {
                     </div>
                 </div>`;
             };
-            /**
- * Handles downloading the recipe as a PDF.
- * This function must be in the global scope.
- * Make sure your 'createRecipeTextForDownload' function is also accessible.
- */
-function handleRecipeDownload(event, title) {
+   window.handleRecipeDownload = function(event, title) {
     // 1. Prevent the link from navigating
     event.preventDefault();
 
@@ -1296,6 +1291,8 @@ function handleRecipeDownload(event, title) {
         const doc = new jsPDF();
 
         // 3. Use your *existing* function to get the formatted recipe text
+        // NOTE: This 'createRecipeTextForDownload' function must ALSO be global
+        // or you will get another error.
         const recipeText = createRecipeTextForDownload(title); 
         
         // 4. Set margins and max width for the text
@@ -1313,7 +1310,7 @@ function handleRecipeDownload(event, title) {
 
     } catch (e) {
         console.error("Error generating PDF:", e);
-        alert("Sorry, there was an error creating the PDF.");
+        alert("Sorry, there was an error creating the PDF. Please check the console (F12).");
     }
 }
 
@@ -2306,6 +2303,7 @@ if (pageId === 'product-page') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
