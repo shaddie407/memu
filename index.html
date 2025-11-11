@@ -166,7 +166,6 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-base" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-16 6h16" /></svg>
                 </button>
             </div>
-        </nav>
         <!-- Add print:hidden to your nav -->
     <nav class="w-full ... print:hidden">
         ...
@@ -174,6 +173,13 @@
 
     <!-- This is where your app renders the recipe -->
     <main id="app-content">
+        <!-- The recipe content will show by default -->
+    </main>
+
+    <!-- Add print:hidden to your footer -->
+    <footer class="w-full ... print:hidden">
+        ...
+    </footer>
         <!-- The recipe content will show by default -->
     </main>
 
@@ -2422,6 +2428,7 @@ if (pageId === 'product-page') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
 
 
 
