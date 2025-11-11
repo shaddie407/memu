@@ -1316,6 +1316,7 @@ const renderRecipePage = (data) => {
             </div>
         </div>
     </div>`;
+
 };
 
 const printRecipe = () => {
@@ -1379,38 +1380,6 @@ const renderRecipesCollectionPage = () => {
     </div>`;
 };
 </script>
-💡How It Works:
-Print Button: Opens a print-only view (no header/footer).
-
-Download PDF Button: Uses html2pdf.js to save the same content as a clean PDF.
-
-Header/Footer Excluded: Only the recipe section (#recipe-content) is captured.
-
-Would you like me to make the printed and PDF versions have a custom clean layout (e.g., centered title, simplified fonts, no shadows)?
-
-
-
-
-
-
-
-You said:
-te code isnt working
-
-
-
-ChatGPT said:
-Got it 👍 — let’s fix that properly.
-
-Here’s a fully working version of your code that:
-✅ Keeps your layout intact
-✅ Adds Print and Download PDF buttons that actually work
-✅ Excludes the site’s header/footer when printing or exporting
-✅ Works immediately when pasted into your HTML/JS page
-
-✅ Fixed & Working Version
-html
-Copy code
 <!-- Include html2pdf.js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -1538,7 +1507,7 @@ const renderRecipesCollectionPage = () => {
                 `).join('')}
             </div>
         </div>
-    </div>
+    </div> 
                 `;
             };
             // REPLACE your old renderProductPage function with this one
@@ -2460,6 +2429,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
