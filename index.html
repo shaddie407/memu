@@ -1283,89 +1283,140 @@ products: {
             };
 
          
-        // --- 5. YOUR UPDATED FUNCTIONS ---
-        // This is your original function, modified to call the new PDF download
-        const renderRecipePage = (data) => {
-            const recipe = content.recipes[data.title];
-            if (!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
+      // --- 5. YOUR UPDATED FUNCTIONS ---
+// (These function definitions are perfect as they are)
 
-            // We pass the *entire* recipe object as a string.
-            // We must encode it to safely put it inside the HTML attribute.
-            const recipeDataString = encodeURIComponent(JSON.stringify(recipe));
-            const recipeTitle = data.title;
+const renderRecipePage = (data) => {
+    const recipe = content.recipes[data.title];
+    if (!recipe) return `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Recipe Not Found</h1></div>`;
 
-            return `
-            <div class="py-16">
-                <div class="container mx-auto px-6 max-w-3xl">
-                    <div class="flex justify-between items-center mb-8">
-                        <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
-                        
-                        <!-- THIS IS THE MODIFIED BUTTON -->
-                        <a href="#" 
-                           onclick="downloadRecipeAsPDF('${recipeTitle}', '${recipeDataString}')" 
-                           class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">
-                           Download as PDF
+    const recipeDataString = encodeURIComponent(JSON.stringify(recipe));
+    const recipeTitle = data.title;
+
+    return `
+    <div class="py-16">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="flex justify-between items-center mb-8">
+                <a href="#" onclick="history.back()" class="text-sm uppercase tracking-widest text-brand-gray inline-block">&larr; Back</a>
+                
+                <a href="#" 
+                    onclick="downloadRecipeAsPDF('${recipeTitle}', '${recipeDataString}')" 
+                    class="inline-block bg-brand-base text-white py-2 px-4 text-xs font-semibold cta-button rounded-md">
+                    Download as PDF
+                </a>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
+                <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
+                <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
+                <span><strong>Servings:</strong> ${recipe.servings}</span>
+            </div>
+            <img src="${recipe.image}" alt="${data.title}" class="w-full rounded-lg mt-8 mb-12 shadow-lg">
+            <div class="prose text-brand-base max-w-none">
+                <p class="text-lg">${recipe.description}</p>
+                <h3>Ingredients</h3>
+                <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+                <h3>Instructions</h3>
+                <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
+            </div>
+        </div>
+    </div>`;
+};
+
+const renderRecipesCollectionPage = () => {
+    const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
+    
+    const renderTag = (tag) => {
+        let color = 'bg-gray-200 text-gray-700';
+        if(!tag) return '';
+        if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
+        if(tag.toLowerCase().includes('quick')) color = 'bg-green-100 text-green-700';
+        if(tag.toLowerCase().includes('breakfast')) color = 'bg-yellow-100 text-yellow-700';
+        if(tag.toLowerCase().includes('classic')) color = 'bg-red-100 text-red-700';
+        return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
+    }
+
+    return `
+    <div class="py-16">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h1 class="text-5xl font-serif text-brand-base text-center mb-16">Recipe Collection</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                ${allRecipes.map(recipe => `
+                    <div class="bg-white p-6 rounded-lg shadow-md cta-button">
+                        <a href="#" onclick="route('${recipe.title}')" class="block">
+                            <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover rounded-md mb-4">
+                            <div class="flex gap-2 mb-2">
+                                ${recipe.tags.map(renderTag).join('')}
+                            </div>
+                            <h2 class="text-2xl font-serif text-brand-base mb-2">${recipe.title}</h2>
+                            <p class="text-sm text-brand-gray line-clamp-2 mb-4">${recipe.description}</p>
+                            <div class="text-xs text-brand-gray">
+                                <span>${recipe.prepTime} Prep</span> &bull;
+                                <span>${recipe.cookTime} Cook</span>
+                            </div>
                         </a>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-serif text-brand-base mt-2">${data.title}</h1>
-                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-gray my-6">
-                        <span><strong>Prep Time:</strong> ${recipe.prepTime}</span>
-                        <span><strong>Cook Time:</strong> ${recipe.cookTime}</span>
-                        <span><strong>Servings:</strong> ${recipe.servings}</span>
-                    </div>
-                    <img src="${recipe.image}" alt="${data.title}" class="w-full rounded-lg mt-8 mb-12 shadow-lg">
-                    <div class="prose text-brand-base max-w-none">
-                        <p class="text-lg">${recipe.description}</p>
-                        <h3>Ingredients</h3>
-                        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-                        <h3>Instructions</h3>
-                        <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
-                    </div>
-                </div>
-            </div>`;
-        };
-        
-        // This is your original function, unchanged
-        const renderRecipesCollectionPage = () => {
-            const allRecipes = Object.entries(content.recipes).map(([title, recipe]) => ({...recipe, title}));
-            
-            const renderTag = (tag) => {
-                let color = 'bg-gray-200 text-gray-700';
-                if(!tag) return '';
-                if(tag.toLowerCase().includes('protein')) color = 'bg-blue-100 text-blue-700';
-                if(tag.toLowerCase().includes('quick')) color = 'bg-green-100 text-green-700';
-                if(tag.toLowerCase().includes('breakfast')) color = 'bg-yellow-100 text-yellow-700';
-                if(tag.toLowerCase().includes('classic')) color = 'bg-red-100 text-red-700';
-                return `<span class="text-[10px] font-semibold px-2 py-1 rounded-full ${color}">${tag}</span>`;
-            }
-
-            return `
-            <div class="py-16">
-                <div class="container mx-auto px-6 max-w-4xl">
-                    <h1 class="text-5xl font-serif text-brand-base text-center mb-16">Recipe Collection</h1>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        ${allRecipes.map(recipe => `
-                            <div class="bg-white p-6 rounded-lg shadow-md cta-button">
-                                <a href="#" onclick="route('${recipe.title}')" class="block">
-                                    <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover rounded-md mb-4">
-                                    <div class="flex gap-2 mb-2">
-                                        ${recipe.tags.map(renderTag).join('')}
-                                    </div>
-                                    <h2 class="text-2xl font-serif text-brand-base mb-2">${recipe.title}</h2>
-                                    <p class="text-sm text-brand-gray line-clamp-2 mb-4">${recipe.description}</p>
-                                    <div class="text-xs text-brand-gray">
-                                        <span>${recipe.prepTime} Prep</span> &bull;
-                                        <span>${recipe.cookTime} Cook</span>
-                                    </div>
-                                </a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
+                `).join('')}
             </div>
-            `;
-        };
+        </div>
+    </div>
+    `;
+};
 
+// --- 6. SIMPLE ROUTER TO RENDER PAGES ---
+
+// We define 'app' here so 'renderPage' can access it,
+// but we will assign it *inside* the event listener.
+let app;
+
+// This function MUST be global (defined outside any listener)
+// so the inline 'onclick' attribute can find it.
+function route(page) {
+    // Simple hash-based routing
+    window.location.hash = page;
+}
+
+// This function can also be global
+function renderPage() {
+    // Add a "guard clause" in case content or app isn't ready
+    if (!app || typeof content === 'undefined' || !content.recipes) {
+        // If app exists, show an error. If not, this will run again once app is found.
+        if (app) {
+            app.innerHTML = `<div class="p-12 text-center"><h1 class="text-4xl font-serif">Error: Recipes could not be loaded.</h1></div>`;
+        }
+        return;
+    }
+
+    const hash = window.location.hash.substring(1); // Get page from URL
+    
+    if (content.recipes[hash]) {
+        // If hash is a recipe title, render the recipe page
+        app.innerHTML = renderRecipePage({ title: hash });
+    } else {
+        // Otherwise, render the main collection page
+        app.innerHTML = renderRecipesCollectionPage();
+    }
+    window.scrollTo(0, 0); // Scroll to top on page change
+}
+
+// --- 7. APP INITIALIZATION ---
+// THIS IS THE FIX: We wait for the HTML to be fully loaded
+// before we try to find '#app' and run the code.
+document.addEventListener('DOMContentLoaded', () => {
+    // Now it's safe to find the 'app' element
+    app = document.getElementById('app');
+
+    // Always a good idea to check if it was found
+    if (app) {
+        // Listen for hash changes
+        window.addEventListener('hashchange', renderPage);
+        
+        // Initial page load
+        renderPage();
+    } else {
+        console.error("Fatal Error: '#app' element not found in the DOM.");
+    }
+});
         // --- 6. SIMPLE ROUTER TO RENDER PAGES ---
         const app = document.getElementById('app');
 
@@ -2406,6 +2457,7 @@ if (pageId === 'product-page') {
     </a>
 </body>
 </html>
+
 
 
 
